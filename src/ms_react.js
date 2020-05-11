@@ -97,7 +97,7 @@ class Board extends React.Component {
         for(let i = 0; i < this.props.rows; i++) {
             let row = [];
             for(let j = 0; j < this.props.cols; j++) {
-                row.push(<td key={(i + 1) * (j + 1)}>{this.renderTile(i, j)}</td>);
+                row.push(<td key={j}>{this.renderTile(i, j)}</td>);
             }
             boardRows.push(
                 <tr key={i} className="board-row">
