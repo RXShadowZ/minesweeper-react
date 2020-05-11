@@ -1,0 +1,121 @@
+
+.game {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-row {
+    display: flex;
+}
+
+table {
+    border: 3px ridge lightgray;
+}
+
+td {
+    border: 0.5px solid gray;
+    border-collapse: collapse;
+    padding: 0px;
+    margin: 0px;
+}
+
+/* Tile appearance classes */
+
+.tile {
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.covered {
+    background-color: lightgray;
+    border: 3px outset;
+}
+
+.revealed {
+    background-color: lightgray;
+    border: none;
+}
+
+.exploded {
+    background-color: red;
+    border: none;
+}
+
+/* Inner Tile appearance classes */
+.flag {
+    background-color: black;
+    height: 12.5px;
+    width: 2px;
+    transform: translate(-4px, 0px);
+}
+
+.flag::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-left: 8px solid red;
+    border-bottom: 4px solid transparent;
+    position: absolute;
+    transform: translate(1px, 0px);
+}
+
+.bomb {
+    background-color: black;
+    height: 12.5px;
+    width: 12.5px;
+    border-radius: 50%;
+    /* transform: translate(-2px, 0px); */
+}
+
+.bomb::after {
+    content: "";
+    background-color: white;
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-4px, 2px);
+}
+
+.number {
+    font: bold 16px "Arial Black", Gadget, sans-serif;
+}
+
+.one {
+    color: blue;
+}
+
+.two {
+    color: green;
+}
+
+.three {
+    color: red;
+}
+
+.four {
+    color: purple;
+}
+
+.five {
+    color: maroon;
+}
+
+.six {
+    color: turquoise;
+}
+
+.seven {
+    color: black;
+}
+
+.eight {
+    color: gray;
+}
