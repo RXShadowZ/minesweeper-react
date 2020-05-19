@@ -1,7 +1,7 @@
 import React from 'react';
 import './css-reset.css';
-import './ms_styles.css';
-import {MinesweeperGameState, CELL_STATE, CELL_VALUE, GAME_STATE, DIFFICULTY} from './minesweeper_logic';
+import './ms-styles.css';
+import {MinesweeperGameState, CELL_STATE, CELL_VALUE, GAME_STATE, DIFFICULTY} from './minesweeper-logic';
 
 class Tile extends React.Component {
     render() {
