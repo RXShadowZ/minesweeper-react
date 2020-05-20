@@ -11,14 +11,13 @@
 }
 
 table {
-    border: 3px ridge lightgray;
+    background-color: lightgray;
+    border: 6px double gray;
+    border-collapse: separate; 
 }
 
 td {
     border: 0.5px solid gray;
-    border-collapse: collapse;
-    padding: 0px;
-    margin: 0px;
 }
 
 /* Tile appearance classes */
