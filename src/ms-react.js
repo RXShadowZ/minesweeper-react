@@ -98,21 +98,19 @@ class Board extends React.Component {
         for(let i = 0; i < this.props.rows; i++) {
             let row = [];
             for(let j = 0; j < this.props.cols; j++) {
-                row.push(<td key={j}>{this.renderTile(i, j)}</td>);
+                row.push(<div key={j} className="cell">{this.renderTile(i, j)}</div>);
             }
             boardRows.push(
-                <tr key={i} className="board-row">
+                <div key={i} className="board-row">
                     {row}
-                </tr>
+                </div>
             );
         }
 
         return (
-            <table className="board">
-                <tbody>
-                    {boardRows}
-                </tbody>
-            </table>
+            <div className="board">
+                {boardRows}
+            </div>
         );
     }
 }
