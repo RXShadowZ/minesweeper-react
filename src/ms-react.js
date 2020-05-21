@@ -125,12 +125,12 @@ class Game extends React.Component {
             bombInput: 10,
             difficulty: DIFFICULTY.BEGINNER,
         }
-        this.handleChange = this.handleChange.bind(this);
+        this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
         this.handleNewGameButton = this.handleNewGameButton.bind(this);
     }
 
-    handleChange(event) {
+    handleSliderChange(event) {
         let slider = event.target
         if(slider.id === "rowInput") {
             this.setState({
@@ -201,7 +201,7 @@ class Game extends React.Component {
         }
     }
 
-    handleClick(e, r, c) {
+    handleBoardClick(e, r, c) {
         e.preventDefault();
         let gameState = this.state.gameState;
         if(gameState.gameState !== GAME_STATE.PLAYING) {
@@ -235,7 +235,7 @@ class Game extends React.Component {
                     cols={this.state.gameState.cols}
                     bombField={this.state.gameState.bombField}
                     gameState={this.state.gameState.gameState}
-                    onClick={(e, r, c) => this.handleClick(e, r, c)}
+                    onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
                 />
                 <div>
                     <div>Set Difficulty: {this.state.difficulty}</div>
@@ -264,7 +264,7 @@ class Game extends React.Component {
                         max="30" 
                         id="rowInput"
                         value={this.state.rowInput} 
-                        onChange={this.handleChange}
+                        onChange={this.handleSliderChange}
                     />
                     <div>Columns: {this.state.colInput}</div>
                     <input 
@@ -273,7 +273,7 @@ class Game extends React.Component {
                         max="30" 
                         id="colInput"
                         value={this.state.colInput}
-                        onChange={this.handleChange}
+                        onChange={this.handleSliderChange}
                     />
                     <div>Bombs: {this.state.bombInput}</div>
                     <input 
@@ -282,7 +282,7 @@ class Game extends React.Component {
                         max="100" 
                         id="bombInput"
                         value={this.state.bombInput} 
-                        onChange={this.handleChange}
+                        onChange={this.handleSliderChange}
                     />
                     <button onClick={this.handleNewGameButton}>
                         Create New Game
