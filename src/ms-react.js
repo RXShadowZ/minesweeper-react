@@ -124,10 +124,12 @@ class Game extends React.Component {
             colInput: 9,
             bombInput: 10,
             difficulty: DIFFICULTY.BEGINNER,
+            sidePanelOpen: false,
         }
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
         this.handleNewGameButton = this.handleNewGameButton.bind(this);
+        this.toggleSidePanel = this.toggleSidePanel.bind(this);
     }
 
     handleSliderChange(event) {
@@ -226,7 +228,27 @@ class Game extends React.Component {
         });
     }
 
+    toggleSidePanel() {
+        this.setState({
+            sidePanelOpen: !this.state.sidePanelOpen,
+        })
+    }
+
     render() {
+        let sidePanelStyle = {
+            width: "0px",
+            padding: "0px",
+        };
+        let sidePanelButtonText = "<";
+        let sidePanelButtonRightPos = "0px";
+        if(this.state.sidePanelOpen) {
+            sidePanelStyle = {
+                width: "225px",
+                padding: "10px",
+            };
+            sidePanelButtonText = ">";
+            sidePanelButtonRightPos = "225px";
+        }
         return (
             <div className="game">
                 <div>{this.state.gameState.gameState}</div>
@@ -237,7 +259,14 @@ class Game extends React.Component {
                     gameState={this.state.gameState.gameState}
                     onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
                 />
-                <div>
+                <button 
+                    className="sidePanelToggle" 
+                    onClick={this.toggleSidePanel}
+                    style={{right: sidePanelButtonRightPos}}
+                >
+                    {sidePanelButtonText}
+                </button>
+                <div className="sidePanel" style={sidePanelStyle}>
                     <div>Set Difficulty: {this.state.difficulty}</div>
                     <button 
                         onClick={this.handleDifficultyButton}
