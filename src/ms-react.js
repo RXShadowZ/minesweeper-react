@@ -236,18 +236,19 @@ class Game extends React.Component {
 
     render() {
         let sidePanelStyle = {
-            width: "0px",
-            padding: "0px",
+            width: "20px",
+            "padding-left": "20px",
+            "padding-right": "0px",
         };
         let sidePanelButtonText = "<";
-        let sidePanelButtonRightPos = "0px";
+        let sidePanelButtonRightPos = "20px";
         if(this.state.sidePanelOpen) {
             sidePanelStyle = {
-                width: "225px",
-                padding: "10px",
+                width: "250px",
+                padding: "20px",
             };
             sidePanelButtonText = ">";
-            sidePanelButtonRightPos = "225px";
+            sidePanelButtonRightPos = "250px";
         }
         return (
             <div className="game">
@@ -260,13 +261,13 @@ class Game extends React.Component {
                     onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
                 />
                 <button 
-                    className="sidePanelToggle" 
+                    className="side-panel-toggle" 
                     onClick={this.toggleSidePanel}
                     style={{right: sidePanelButtonRightPos}}
                 >
                     {sidePanelButtonText}
                 </button>
-                <div className="sidePanel" style={sidePanelStyle}>
+                <div className="side-panel" style={sidePanelStyle}>
                     <div>Set Difficulty: {this.state.difficulty}</div>
                     <button 
                         onClick={this.handleDifficultyButton}
@@ -305,7 +306,7 @@ class Game extends React.Component {
                         onChange={this.handleSliderChange}
                     />
                     <div>Bombs: {this.state.bombInput}</div>
-                    <input 
+                    <input
                         type="range" 
                         min="5" 
                         max="100" 
