@@ -8,18 +8,22 @@
 }
 
 .side-panel-toggle {
-    height: 70px;
-    width: 35px;
-    text-align: center;
+    height: 30px;
+    width: 150px;
     background-color: lightblue;
     position: fixed;
-    border-radius: 70px 0 0 70px;
     z-index: 1;
-    right: 0;
-    top: 46%;
+    right: 190px;
+    top: 60px;
     overflow: hidden;
     border: none;
+    border-left: 1px solid gray;
+    transform: rotate(270deg);
     transition: 1s;
+}
+
+.side-panel-toggle:focus {
+    outline: none;
 }
 
 .side-panel {
@@ -29,20 +33,15 @@
     box-sizing: border-box; 
     border: none;
     min-height: 100vh;
-    width: 225px;
+    width: 250px;
     position: fixed;
     z-index: 1;
     top: 0;
     right: 0;
     background-color: lightblue;
-    padding: 10px;
+    padding: 20px;
     overflow: hidden;
     transition: 1s;
-}
-
-.side-panel * {
-    display: block;
-    width: 210px;
 }
 
 .board {

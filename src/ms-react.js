@@ -236,19 +236,19 @@ class Game extends React.Component {
 
     render() {
         let sidePanelStyle = {
-            width: "20px",
-            "padding-left": "20px",
-            "padding-right": "0px",
+            transform: "translateX(250px)",
         };
-        let sidePanelButtonText = "<";
-        let sidePanelButtonRightPos = "20px";
+        let sidePanelButtonText = "New Game";
+        let sidePanelButtonRightStyle = {
+            right: "-60px",
+        };
         if(this.state.sidePanelOpen) {
             sidePanelStyle = {
-                width: "250px",
-                padding: "20px",
+                transform: "translateX(0px)",
             };
-            sidePanelButtonText = ">";
-            sidePanelButtonRightPos = "250px";
+            sidePanelButtonRightStyle = {
+                right: "190px",
+            };
         }
         return (
             <div className="game">
@@ -263,7 +263,7 @@ class Game extends React.Component {
                 <button 
                     className="side-panel-toggle" 
                     onClick={this.toggleSidePanel}
-                    style={{right: sidePanelButtonRightPos}}
+                    style={sidePanelButtonRightStyle}
                 >
                     {sidePanelButtonText}
                 </button>
