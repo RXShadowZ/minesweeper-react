@@ -115,6 +115,11 @@ class Board extends React.Component {
     }
 }
 
+const SIDEBAR_PANEL = Object.freeze({
+    NEW_GAME_SETTINGS: "New Game Settings",
+    HOW_TO_PLAY: "How to Play",
+});
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -124,12 +129,14 @@ class Game extends React.Component {
             colInput: 9,
             bombInput: 10,
             difficulty: DIFFICULTY.BEGINNER,
-            sidePanelOpen: false,
+            sidebarOpen: false,
+            sidebarPanel: SIDEBAR_PANEL.NEW_GAME_SETTINGS,
         }
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
         this.handleNewGameButton = this.handleNewGameButton.bind(this);
-        this.toggleSidePanel = this.toggleSidePanel.bind(this);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.handleSidebarPanelSwitch = this.handleSidebarPanelSwitch.bind(this);
     }
 
     handleSliderChange(event) {
@@ -228,28 +235,143 @@ class Game extends React.Component {
         });
     }
 
-    toggleSidePanel() {
+    toggleSidebar() {
         this.setState({
-            sidePanelOpen: !this.state.sidePanelOpen,
+            sidebarOpen: !this.state.sidebarOpen,
         })
     }
 
-    render() {
-        let sidePanelStyle = {
-            transform: "translateX(250px)",
+    handleSidebarPanelSwitch(event) {
+        if(event.target.value === this.state.sidebarPanel) {
+            return;
+        }
+        this.setState({
+            sidebarPanel: event.target.value
+        });
+    }
+
+    renderSidebar() { 
+        let sidebarStyle = {
+            transform: "translateX(325px)",
         };
-        let sidePanelButtonText = "New Game";
-        let sidePanelButtonRightStyle = {
-            right: "-60px",
-        };
-        if(this.state.sidePanelOpen) {
-            sidePanelStyle = {
+        if(this.state.sidebarOpen) {
+            sidebarStyle = {
                 transform: "translateX(0px)",
             };
-            sidePanelButtonRightStyle = {
-                right: "190px",
-            };
         }
+
+        let toggleText = "<<";
+        if(this.state.sidebarOpen) {
+            toggleText = ">>";
+        }
+
+        let sidebarPanel = this.renderHowToPlayPanel();
+        let settingsStyle = "";
+        let howToPlayStyle = "";
+        switch(this.state.sidebarPanel) {
+            case SIDEBAR_PANEL.NEW_GAME_SETTINGS:
+                settingsStyle = "selected";
+                sidebarPanel = this.renderSettingsPanel();
+                break;
+            default: // SIDEBAR_PANEL.HOW_TO_PLAY
+                howToPlayStyle = "selected";
+                break;
+        }
+
+        return (
+            <div className="sidebar" style={sidebarStyle}>
+                <button 
+                    className="sidebar-toggle"
+                    onClick={this.toggleSidebar}
+                >
+                    {toggleText}
+                </button>
+                <div className="sidebar-nav">
+                    <button 
+                        className={howToPlayStyle}
+                        onClick={this.handleSidebarPanelSwitch}
+                        value={SIDEBAR_PANEL.HOW_TO_PLAY}
+                    >
+                        {SIDEBAR_PANEL.HOW_TO_PLAY}
+                    </button>
+                    <button 
+                        className={settingsStyle}
+                        onClick={this.handleSidebarPanelSwitch}
+                        value={SIDEBAR_PANEL.NEW_GAME_SETTINGS}
+                    >
+                        {SIDEBAR_PANEL.NEW_GAME_SETTINGS}
+                    </button>
+                </div>
+                {sidebarPanel}
+            </div>
+        );
+    }
+
+    renderHowToPlayPanel() {
+        return (
+            <div className="sidebar-panel">
+                Placeholder text
+            </div>
+        );
+    }
+
+    renderSettingsPanel() {
+        return (
+            <div className="sidebar-panel sidebar-settings-panel">
+                <div>Set Difficulty: {this.state.difficulty}</div>
+                <button 
+                    onClick={this.handleDifficultyButton}
+                    value={DIFFICULTY.BEGINNER}
+                >
+                        {DIFFICULTY.BEGINNER}
+                </button>
+                <button 
+                    onClick={this.handleDifficultyButton}
+                    value={DIFFICULTY.INTERMEDIATE}
+                >
+                    {DIFFICULTY.INTERMEDIATE}
+                </button>
+                <button 
+                    onClick={this.handleDifficultyButton}
+                    value={DIFFICULTY.EXPERT}
+                >
+                    {DIFFICULTY.EXPERT}
+                </button>
+                <div>Rows: {this.state.rowInput}</div>
+                <input 
+                    type="range" 
+                    min="5" 
+                    max="30" 
+                    id="rowInput"
+                    value={this.state.rowInput} 
+                    onChange={this.handleSliderChange}
+                />
+                <div>Columns: {this.state.colInput}</div>
+                <input 
+                    type="range" 
+                    min="5"
+                    max="30" 
+                    id="colInput"
+                    value={this.state.colInput}
+                    onChange={this.handleSliderChange}
+                />
+                <div>Bombs: {this.state.bombInput}</div>
+                <input
+                    type="range" 
+                    min="5" 
+                    max="100" 
+                    id="bombInput"
+                    value={this.state.bombInput} 
+                    onChange={this.handleSliderChange}
+                />
+                <button onClick={this.handleNewGameButton}>
+                    Create New Game
+                </button>
+            </div>
+        );
+    }
+
+    render() {
         return (
             <div className="game">
                 <div>{this.state.gameState.gameState}</div>
@@ -260,64 +382,7 @@ class Game extends React.Component {
                     gameState={this.state.gameState.gameState}
                     onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
                 />
-                <button 
-                    className="side-panel-toggle" 
-                    onClick={this.toggleSidePanel}
-                    style={sidePanelButtonRightStyle}
-                >
-                    {sidePanelButtonText}
-                </button>
-                <div className="side-panel" style={sidePanelStyle}>
-                    <div>Set Difficulty: {this.state.difficulty}</div>
-                    <button 
-                        onClick={this.handleDifficultyButton}
-                        value={DIFFICULTY.BEGINNER}
-                    >
-                            {DIFFICULTY.BEGINNER}
-                    </button>
-                    <button 
-                        onClick={this.handleDifficultyButton}
-                        value={DIFFICULTY.INTERMEDIATE}
-                    >
-                        {DIFFICULTY.INTERMEDIATE}
-                    </button>
-                    <button 
-                        onClick={this.handleDifficultyButton}
-                        value={DIFFICULTY.EXPERT}
-                    >
-                        {DIFFICULTY.EXPERT}
-                    </button>
-                    <div>Rows: {this.state.rowInput}</div>
-                    <input 
-                        type="range" 
-                        min="5" 
-                        max="30" 
-                        id="rowInput"
-                        value={this.state.rowInput} 
-                        onChange={this.handleSliderChange}
-                    />
-                    <div>Columns: {this.state.colInput}</div>
-                    <input 
-                        type="range" 
-                        min="5"
-                        max="30" 
-                        id="colInput"
-                        value={this.state.colInput}
-                        onChange={this.handleSliderChange}
-                    />
-                    <div>Bombs: {this.state.bombInput}</div>
-                    <input
-                        type="range" 
-                        min="5" 
-                        max="100" 
-                        id="bombInput"
-                        value={this.state.bombInput} 
-                        onChange={this.handleSliderChange}
-                    />
-                    <button onClick={this.handleNewGameButton}>
-                        Create New Game
-                    </button>
-                </div>
+                {this.renderSidebar()}
             </div>
         );
     }
