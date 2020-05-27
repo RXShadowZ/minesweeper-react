@@ -96,6 +96,14 @@
     justify-content: center; */
 }
 
+.tile:focus {
+    outline: none;
+}
+
+.tile:active {
+    border: 3px inset;
+}
+
 .covered {
     background-color: lightgray;
     border: 3px outset;
