@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './css-reset.css';
 import './ms-styles.css';
 import {MinesweeperGameState, CELL_STATE, CELL_VALUE, GAME_STATE, DIFFICULTY} from './minesweeper-logic';
@@ -95,6 +96,7 @@ class Board extends React.Component {
 
     render() {
         const boardRows = [];
+        // boardRows.push(<div className="game-status">Holder</div>);
         for(let i = 0; i < this.props.rows; i++) {
             let row = [];
             for(let j = 0; j < this.props.cols; j++) {
@@ -373,15 +375,24 @@ class Game extends React.Component {
 
     render() {
         return (
-            <div className="game">
-                <div>{this.state.gameState.gameState}</div>
-                <Board 
-                    rows={this.state.gameState.rows} 
-                    cols={this.state.gameState.cols}
-                    bombField={this.state.gameState.bombField}
-                    gameState={this.state.gameState.gameState}
-                    onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
-                />
+            <div className="app">
+                <div className="game">
+                    <div className="game-status">
+                        <div className="counter-panel">188</div>
+                        <div className="center-panel">
+                            <button className="panel-tile"><span role="img" aria-label="neutral face">😐</span></button>
+                            <button className="panel-tile"><div className="flag"></div></button>
+                        </div>
+                        <div className="counter-panel">888</div>
+                    </div>
+                    <Board 
+                        rows={this.state.gameState.rows} 
+                        cols={this.state.gameState.cols}
+                        bombField={this.state.gameState.bombField}
+                        gameState={this.state.gameState.gameState}
+                        onClick={(e, r, c) => this.handleBoardClick(e, r, c)}
+                    />
+                </div>
                 {this.renderSidebar()}
             </div>
         );

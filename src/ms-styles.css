@@ -1,10 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap');
 
-.game {
+.app {
     min-height: 100vh;
     min-width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
 .sidebar {
@@ -70,8 +71,66 @@
     margin: 5px;
 }
 
+.game {
+    display: flex;
+    background-color: lightgray;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 3px outset;
+    padding: 10px;
+}
+
 .board {
-    border: 8px ridge lightgray;
+    background-color: lightgray;
+    border: 3px inset;
+}
+
+.game-status {
+    height: 50px;
+    width: 100%;
+    background-color: lightgray;
+    border: 3px inset;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+}
+
+.counter-panel {
+    background-color: black;
+    color: red;
+    height: 28px;
+    width: 55px;
+    text-align: center;
+    font-family: 'ZCOOL QingKe HuangYou', cursive;
+    font-size: 28px;
+}
+
+.center-panel {
+    width: 70px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-tile {
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    background-color: lightgray;
+    border: 3px outset;
+}
+
+.panel-tile:focus {
+    outline: none;
+}
+
+.panel-tile:active {
+    border: 3px inset;
 }
 
 .board-row {
@@ -89,6 +148,8 @@
 /* Tile appearance classes */
 
 .tile {
+    background-color: lightgray;
+    box-sizing: border-box;
     height: 25px;
     width: 25px;
     /* display: flex;
@@ -100,17 +161,15 @@
     outline: none;
 }
 
-.tile:active {
-    border: 3px inset;
-}
-
 .covered {
-    background-color: lightgray;
     border: 3px outset;
 }
 
+.covered:active {
+    border: 3px inset;
+}
+
 .revealed {
-    background-color: lightgray;
     border: none;
 }
 
