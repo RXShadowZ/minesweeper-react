@@ -96,7 +96,6 @@ class Board extends React.Component {
 
     render() {
         const boardRows = [];
-        // boardRows.push(<div className="game-status">Holder</div>);
         for(let i = 0; i < this.props.rows; i++) {
             let row = [];
             for(let j = 0; j < this.props.cols; j++) {
@@ -381,7 +380,7 @@ class Game extends React.Component {
                         <div className="counter-panel">188</div>
                         <div className="center-panel">
                             <button className="panel-tile"><span role="img" aria-label="neutral face">😐</span></button>
-                            <button className="panel-tile"><div className="flag"></div></button>
+                            <button className="panel-tile"><div className="bomb"></div></button>
                         </div>
                         <div className="counter-panel">888</div>
                     </div>
