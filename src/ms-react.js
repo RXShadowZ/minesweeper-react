@@ -135,6 +135,7 @@ class Game extends React.Component {
             timer: 0,
             activeTimer: false,
             timerFunc: null,
+            flagCounter: 10,
         }
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
@@ -213,6 +214,7 @@ class Game extends React.Component {
                     timer: 0,
                     activeTimer: false,
                     timerFunc: null,
+                    flagCounter: this.state.bombInput,
                 });
             }
         }
@@ -225,11 +227,23 @@ class Game extends React.Component {
             return;
         }
         let newGameState;
-        if(e.type === 'click')
+        if(e.type === 'click') { // toggle state?
             newGameState = MinesweeperGameState.sweep(gameState, r, c);
-        else // (e.type === 'contextmenu')
+        } else { // (e.type === 'contextmenu')
+            let flagCounter = this.state.flagCounter;
+            if(gameState.bombField[r][c].state === CELL_STATE.COVERED) {
+                if(this.state.flagCounter === 0) {
+                    return;
+                }
+                flagCounter--;
+            } else {
+                flagCounter++;
+            }
             newGameState = MinesweeperGameState.flag(gameState, r, c);
-            
+            this.setState({
+                flagCounter: flagCounter,
+            });
+        }    
         if(newGameState === 0) {
             console.log("Invalid input!");
             return;
@@ -400,25 +414,33 @@ class Game extends React.Component {
         });
     }
 
-    render() {
-        let renderTimer = this.state.timer;
-        if(renderTimer < 10) {
-            renderTimer = "00" + renderTimer.toString();
-        } else if(renderTimer < 100) {
-            renderTimer = "0" + renderTimer.toString();
-        } else if(renderTimer > 999) {
-            renderTimer = 999;
+    renderCounter(toRender) {
+        let output = toRender;
+        if(output < 10) {
+            output = "00" + output.toString();
+        } else if(output < 100) {
+            output = "0" + output.toString();
+        } else if(output > 999) {
+            output = 999;
         }
+        return output;
+    }
+
+    render() {
         return (
             <div className="app">
                 <div className="game">
                     <div className="game-status">
-                        <div className="counter-panel">188</div>
+                        <div className="counter-panel">
+                            {this.renderCounter(this.state.flagCounter)}
+                        </div>
                         <div className="center-panel">
                             <button className="panel-tile"><span role="img" aria-label="neutral face">😐</span></button>
                             <button className="panel-tile"><div className="bomb"></div></button>
                         </div>
-                        <div className="counter-panel">{renderTimer}</div>
+                        <div className="counter-panel">
+                            {this.renderCounter(this.state.timer)}
+                        </div>
                     </div>
                     <Board 
                         rows={this.state.gameState.rows} 
