@@ -132,6 +132,9 @@ class Game extends React.Component {
             difficulty: DIFFICULTY.BEGINNER,
             sidebarOpen: false,
             sidebarPanel: SIDEBAR_PANEL.NEW_GAME_SETTINGS,
+            timer: 0,
+            activeTimer: false,
+            timerFunc: null,
         }
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
@@ -204,8 +207,12 @@ class Game extends React.Component {
                 console.log("Invalid difficulty input!");
                 return;
             } else { // Valid newGameState created
+                clearInterval(this.state.timerFunc);
                 this.setState({
                     gameState: newGameState,
+                    timer: 0,
+                    activeTimer: false,
+                    timerFunc: null,
                 });
             }
         }
@@ -234,6 +241,21 @@ class Game extends React.Component {
         this.setState({
             gameState: newGameState,
         });
+
+        if(!this.state.activeTimer 
+            && newGameState.gameState === GAME_STATE.PLAYING) {
+            this.setState({
+                activeTimer: true,
+                timerFunc: setInterval(() => this.tick(), 1000),
+            })
+        }
+        if(newGameState.gameState !== GAME_STATE.PLAYING) {
+            clearInterval(this.state.timerFunc);
+            this.setState({
+                activeTimer: false,
+                timerFunc: null,
+            })
+        }
     }
 
     toggleSidebar() {
@@ -372,7 +394,21 @@ class Game extends React.Component {
         );
     }
 
+    tick() {
+        this.setState({
+            timer: this.state.timer + 1,
+        });
+    }
+
     render() {
+        let renderTimer = this.state.timer;
+        if(renderTimer < 10) {
+            renderTimer = "00" + renderTimer.toString();
+        } else if(renderTimer < 100) {
+            renderTimer = "0" + renderTimer.toString();
+        } else if(renderTimer > 999) {
+            renderTimer = 999;
+        }
         return (
             <div className="app">
                 <div className="game">
@@ -382,7 +418,7 @@ class Game extends React.Component {
                             <button className="panel-tile"><span role="img" aria-label="neutral face">😐</span></button>
                             <button className="panel-tile"><div className="bomb"></div></button>
                         </div>
-                        <div className="counter-panel">888</div>
+                        <div className="counter-panel">{renderTimer}</div>
                     </div>
                     <Board 
                         rows={this.state.gameState.rows} 
