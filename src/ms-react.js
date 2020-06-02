@@ -121,6 +121,19 @@ const SIDEBAR_PANEL = Object.freeze({
     HOW_TO_PLAY: "How to Play",
 });
 
+const CLICK_STATE = Object.freeze({
+    SWEEP: "sweep",
+    FLAG: "flag",
+});
+
+const EMOJI_STATE = Object.freeze({
+    NEUTRAL: "neutral",
+    OPEN_MOUTH: "open mouth",
+    SCREAM: "scream",
+    SMILE: "smile",
+    SMILE_SUNGLASSES: "smile with sunglasses",
+});
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -136,12 +149,16 @@ class Game extends React.Component {
             activeTimer: false,
             timerFunc: null,
             flagCounter: 10,
+            clickState: CLICK_STATE.SWEEP,
+            emojiState: EMOJI_STATE.NEUTRAL,
         }
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.handleDifficultyButton = this.handleDifficultyButton.bind(this);
         this.handleNewGameButton = this.handleNewGameButton.bind(this);
-        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.handleEmojiButton = this.handleEmojiButton.bind(this);
         this.handleSidebarPanelSwitch = this.handleSidebarPanelSwitch.bind(this);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.toggleClickState = this.toggleClickState.bind(this);
     }
 
     handleSliderChange(event) {
@@ -215,6 +232,7 @@ class Game extends React.Component {
                     activeTimer: false,
                     timerFunc: null,
                     flagCounter: this.state.bombInput,
+                    emojiState: EMOJI_STATE.NEUTRAL,
                 });
             }
         }
@@ -227,9 +245,11 @@ class Game extends React.Component {
             return;
         }
         let newGameState;
-        if(e.type === 'click') { // toggle state?
+        let newEmojiState = EMOJI_STATE.SMILE;
+        if(e.type === 'click' && this.state.clickState === CLICK_STATE.SWEEP) {
             newGameState = MinesweeperGameState.sweep(gameState, r, c);
         } else { // (e.type === 'contextmenu')
+            newEmojiState = EMOJI_STATE.NEUTRAL;
             let flagCounter = this.state.flagCounter;
             if(gameState.bombField[r][c].state === CELL_STATE.COVERED) {
                 if(this.state.flagCounter === 0) {
@@ -252,8 +272,14 @@ class Game extends React.Component {
             console.log("Invalid move!");
             return;
         }
+        if(newGameState.gameState === GAME_STATE.WIN) {
+            newEmojiState = EMOJI_STATE.SMILE_SUNGLASSES;
+        } else if(newGameState.gameState === GAME_STATE.LOSS) {
+            newEmojiState = EMOJI_STATE.SCREAM;
+        }
         this.setState({
             gameState: newGameState,
+            emojiState: newEmojiState,
         });
 
         if(!this.state.activeTimer 
@@ -272,18 +298,48 @@ class Game extends React.Component {
         }
     }
 
-    toggleSidebar() {
-        this.setState({
-            sidebarOpen: !this.state.sidebarOpen,
-        })
-    }
-
     handleSidebarPanelSwitch(event) {
         if(event.target.value === this.state.sidebarPanel) {
             return;
         }
         this.setState({
             sidebarPanel: event.target.value
+        });
+    }
+
+    handleEmojiButton() {
+        this.toggleSidebar();
+        this.setState({
+            sidebarPanel: SIDEBAR_PANEL.NEW_GAME_SETTINGS,
+        });
+        if(this.state.gameState.gameState === GAME_STATE.PLAYING) {
+            this.setState({
+                emojiState: EMOJI_STATE.OPEN_MOUTH,
+            });
+        }
+    }
+
+    toggleSidebar() {
+        this.setState({
+            sidebarOpen: !this.state.sidebarOpen,
+        })
+    }
+
+    toggleClickState() {
+        let newClickState;
+        if(this.state.clickState === CLICK_STATE.SWEEP) {
+            newClickState = CLICK_STATE.FLAG;
+        } else {
+            newClickState = CLICK_STATE.SWEEP;
+        }
+        this.setState({
+            clickState: newClickState,
+        });
+    }
+
+    tick() {
+        this.setState({
+            timer: this.state.timer + 1,
         });
     }
 
@@ -408,12 +464,6 @@ class Game extends React.Component {
         );
     }
 
-    tick() {
-        this.setState({
-            timer: this.state.timer + 1,
-        });
-    }
-
     renderCounter(toRender) {
         let output = toRender;
         if(output < 10) {
@@ -426,6 +476,29 @@ class Game extends React.Component {
         return output;
     }
 
+    renderEmoji() {
+        let emojiState = this.state.emojiState;
+        let emoji = <span role="img" aria-label="neutral face">😐</span>;
+        if(emojiState === EMOJI_STATE.SMILE_SUNGLASSES) {
+            emoji = <span role="img" aria-label="smiling face with sunglasses">😎</span>
+        } else if(emojiState === EMOJI_STATE.SCREAM) {
+            emoji = <span role="img" aria-label="face screaming in fear">😱</span>
+        } else if(emojiState === EMOJI_STATE.SMILE) {
+            emoji = <span role="img" aria-label="slightly smiling face">🙂</span>
+        } else if(emojiState === EMOJI_STATE.OPEN_MOUTH) {
+            emoji = <span role="img" aria-label="face with mouth open">😮</span>
+        }
+        return emoji;
+    }
+
+    renderClickState() {
+        let icon = <div className="bomb"></div>;
+        if(this.state.clickState === CLICK_STATE.FLAG) {
+            icon = <div className="flag"></div>;
+        }
+        return icon;
+    }
+
     render() {
         return (
             <div className="app">
@@ -435,8 +508,18 @@ class Game extends React.Component {
                             {this.renderCounter(this.state.flagCounter)}
                         </div>
                         <div className="center-panel">
-                            <button className="panel-tile"><span role="img" aria-label="neutral face">😐</span></button>
-                            <button className="panel-tile"><div className="bomb"></div></button>
+                            <button 
+                                className="panel-tile"
+                                onClick={this.handleEmojiButton}
+                            >
+                                {this.renderEmoji()}
+                                </button>
+                            <button 
+                                className="panel-tile"
+                                onClick={this.toggleClickState}
+                            >
+                                {this.renderClickState()}
+                            </button>
                         </div>
                         <div className="counter-panel">
                             {this.renderCounter(this.state.timer)}
