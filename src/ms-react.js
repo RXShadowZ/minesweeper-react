@@ -117,8 +117,9 @@ class Board extends React.Component {
 }
 
 const SIDEBAR_PANEL = Object.freeze({
-    NEW_GAME_SETTINGS: "New Game Settings",
+    DEVELOPMENT: "Development",
     HOW_TO_PLAY: "How to Play",
+    NEW_GAME_SETTINGS: "New Game Settings",
 });
 
 const CLICK_STATE = Object.freeze({
@@ -144,7 +145,7 @@ class Game extends React.Component {
             bombInput: 10,
             difficulty: DIFFICULTY.BEGINNER,
             sidebarOpen: false,
-            sidebarPanel: SIDEBAR_PANEL.NEW_GAME_SETTINGS,
+            sidebarPanel: SIDEBAR_PANEL.HOW_TO_PLAY,
             timer: 0,
             activeTimer: false,
             timerFunc: null,
@@ -220,6 +221,7 @@ class Game extends React.Component {
             let newGameState = MinesweeperGameState.safeConstructor(this.state.difficulty, this.state.rowInput, this.state.colInput, this.state.bombInput);
             if(newGameState === -1) {
                 console.log("Invalid input for either rows, columns, or bombs!");
+                alert("Could not create new game! Number of bombs exceeds number of possible spaces! Lower bomb count or increase the number of rows/columns.");
                 return;
             } else if (newGameState === 0) {
                 console.log("Invalid difficulty input!");
@@ -248,6 +250,14 @@ class Game extends React.Component {
         let newEmojiState = EMOJI_STATE.SMILE;
         if(e.type === 'click' && this.state.clickState === CLICK_STATE.SWEEP) {
             newGameState = MinesweeperGameState.sweep(gameState, r, c);
+            if(!this.state.activeTimer 
+                && newGameState.gameState === GAME_STATE.PLAYING) {
+                this.setState({
+                    activeTimer: true,
+                    timerFunc: setInterval(() => this.tick(), 1000),
+                    flagCounter: this.state.gameState.bombCount,
+                })
+            }
         } else { // (e.type === 'contextmenu')
             newEmojiState = EMOJI_STATE.NEUTRAL;
             let flagCounter = this.state.flagCounter;
@@ -282,13 +292,6 @@ class Game extends React.Component {
             emojiState: newEmojiState,
         });
 
-        if(!this.state.activeTimer 
-            && newGameState.gameState === GAME_STATE.PLAYING) {
-            this.setState({
-                activeTimer: true,
-                timerFunc: setInterval(() => this.tick(), 1000),
-            })
-        }
         if(newGameState.gameState !== GAME_STATE.PLAYING) {
             clearInterval(this.state.timerFunc);
             this.setState({
@@ -345,7 +348,7 @@ class Game extends React.Component {
 
     renderSidebar() { 
         let sidebarStyle = {
-            transform: "translateX(325px)",
+            transform: "translateX(295px)",
         };
         if(this.state.sidebarOpen) {
             sidebarStyle = {
@@ -361,10 +364,15 @@ class Game extends React.Component {
         let sidebarPanel = this.renderHowToPlayPanel();
         let settingsStyle = "";
         let howToPlayStyle = "";
+        let devStyle = "";
         switch(this.state.sidebarPanel) {
             case SIDEBAR_PANEL.NEW_GAME_SETTINGS:
                 settingsStyle = "selected";
                 sidebarPanel = this.renderSettingsPanel();
+                break;
+            case SIDEBAR_PANEL.DEVELOPMENT:
+                devStyle = "selected";
+                sidebarPanel = this.renderDevPanel();
                 break;
             default: // SIDEBAR_PANEL.HOW_TO_PLAY
                 howToPlayStyle = "selected";
@@ -394,6 +402,13 @@ class Game extends React.Component {
                     >
                         {SIDEBAR_PANEL.NEW_GAME_SETTINGS}
                     </button>
+                    <button
+                        className={devStyle}
+                        onClick={this.handleSidebarPanelSwitch}
+                        value={SIDEBAR_PANEL.DEVELOPMENT}
+                    >
+                        {SIDEBAR_PANEL.DEVELOPMENT}
+                    </button>
                 </div>
                 {sidebarPanel}
             </div>
@@ -403,7 +418,15 @@ class Game extends React.Component {
     renderHowToPlayPanel() {
         return (
             <div className="sidebar-panel">
-                Placeholder text
+                <h1>Quickstart</h1>
+            </div>
+        );
+    }
+
+    renderDevPanel() {
+        return (
+            <div className="sidebar-panel">
+                Placeholder
             </div>
         );
     }
@@ -433,7 +456,7 @@ class Game extends React.Component {
                 <div>Rows: {this.state.rowInput}</div>
                 <input 
                     type="range" 
-                    min="5" 
+                    min="9" 
                     max="30" 
                     id="rowInput"
                     value={this.state.rowInput} 
@@ -442,7 +465,7 @@ class Game extends React.Component {
                 <div>Columns: {this.state.colInput}</div>
                 <input 
                     type="range" 
-                    min="5"
+                    min="9"
                     max="30" 
                     id="colInput"
                     value={this.state.colInput}
@@ -451,8 +474,8 @@ class Game extends React.Component {
                 <div>Bombs: {this.state.bombInput}</div>
                 <input
                     type="range" 
-                    min="5" 
-                    max="100" 
+                    min="10" 
+                    max="200" 
                     id="bombInput"
                     value={this.state.bombInput} 
                     onChange={this.handleSliderChange}

@@ -31,38 +31,20 @@ class Cell {
     }
 }
 export class MinesweeperGameState {
-    constructor(rows=9, cols=9, bombCount=10, isCopy=false) {
+    constructor(rows=9, cols=9, bombCount=10) {
         this.rows = rows;
         this.cols = cols;
         this.bombCount = bombCount;
         this.gameState = GAME_STATE.PLAYING; 
         this.bombField = [];
         this.bombs = [];
+        this.firstMoveMade = false;
         for(let i = 0; i < rows; i++) {
             let row = [];
             for(let j = 0; j < cols; j++) {
                 row.push(new Cell());
             }
             this.bombField.push(row);
-        }
-        if(!isCopy) {
-            while(this.bombs.length < this.bombCount) {
-                let i = Math.floor(Math.random() * this.rows);
-                let j = Math.floor(Math.random() * this.cols);
-                if(this.bombField[i][j].value !== CELL_VALUE.BOMB) {
-                    this.bombField[i][j].value = CELL_VALUE.BOMB;
-                    this.bombs.push([i, j]);
-                    let adjacentCells = this.getAdjacentCells(i, j);
-                    adjacentCells.forEach(elem => {
-                        let cell = this.bombField[elem[0]][elem[1]];
-                        if(cell.value === CELL_VALUE.EMPTY) {
-                            cell.value = 1;
-                        } else if (cell.value !== CELL_VALUE.BOMB) { // value is a number
-                            cell.value++;
-                        }
-                    });
-                }
-            }
         }
     }
 
@@ -124,7 +106,7 @@ export class MinesweeperGameState {
     }
 
     copy() {
-        let copy = new MinesweeperGameState(this.rows, this.cols, this.bombCount, true);
+        let copy = new MinesweeperGameState(this.rows, this.cols, this.bombCount);
         copy.gameState = this.gameState;
         copy.bombs = [];
         for(let i = 0; i < this.bombs.length; i++) {
@@ -136,6 +118,7 @@ export class MinesweeperGameState {
                 copy.bombField[i][j].state = this.bombField[i][j].state;
             }
         }
+        copy.firstMoveMade = this.firstMoveMade;
         return copy;
     }
 
@@ -177,6 +160,33 @@ export class MinesweeperGameState {
             return -1;
         }
         let newGameState = gameState.copy();
+        if(!newGameState.firstMoveMade) {
+            // Wipe flags
+            for(let r = 0; r < newGameState.rows; r++) {
+                for(let c = 0; c < newGameState.cols; c++) {
+                    newGameState.bombField[r][c].state = CELL_STATE.COVERED;
+                }
+            }
+            // Populate bombField
+            while(newGameState.bombs.length < newGameState.bombCount) {
+                let r = Math.floor(Math.random() * newGameState.rows);
+                let c = Math.floor(Math.random() * newGameState.cols);
+                if((r !== row && c !== col) && newGameState.bombField[r][c].value !== CELL_VALUE.BOMB) {
+                    newGameState.bombField[r][c].value = CELL_VALUE.BOMB;
+                    newGameState.bombs.push([r, c]);
+                    let adjacentCells = newGameState.getAdjacentCells(r, c);
+                    adjacentCells.forEach(elem => {
+                        let cell = newGameState.bombField[elem[0]][elem[1]];
+                        if(cell.value === CELL_VALUE.EMPTY) {
+                            cell.value = 1;
+                        } else if (cell.value !== CELL_VALUE.BOMB) { // value is a number
+                            cell.value++;
+                        }
+                    });
+                }
+            }
+            newGameState.firstMoveMade = true;
+        }
         let cell = newGameState.bombField[row][col];
         if(cell.value === CELL_VALUE.BOMB) {
             cell.state = CELL_STATE.EXPLODED;
