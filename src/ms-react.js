@@ -418,7 +418,25 @@ class Game extends React.Component {
     renderHowToPlayPanel() {
         return (
             <div className="sidebar-panel">
-                <h1>Quickstart</h1>
+                <h1>Minesweeper</h1>
+                <h2>Quickstart</h2>
+                <p>
+                    If you are familiar with how to play Minesweeper already, view these instructions to quickly start playing.
+                    Otherwise, please read the <strong>how to play</strong> below.
+                </p>
+                <h3>For mouse users:</h3>
+                <p>
+                    <strong>Left Click</strong> to <strong>sweep</strong> the field.
+                    <strong>Right Click</strong> to place a <strong>flag</strong>.
+                </p>
+                <h3>For touchscreen users:</h3>
+                <p>
+                     <strong>Tap</strong> to either <strong>sweep</strong> or place a <strong>flag</strong>.
+                </p>
+                <h2>How to Play</h2>
+                <a href="https://en.wikipedia.org/wiki/Minesweeper_(video_game)#Gameplay">
+                    Placeholder link for how to play
+                </a>
             </div>
         );
     }
@@ -426,7 +444,7 @@ class Game extends React.Component {
     renderDevPanel() {
         return (
             <div className="sidebar-panel">
-                Placeholder
+                Placeholder text
             </div>
         );
     }
@@ -524,7 +542,11 @@ class Game extends React.Component {
 
     render() {
         return (
-            <div className="app">
+            <div className="game-container">
+                <div className="banner">
+                    For the best experience please use the Google Chrome browser on a desktop or laptop. 
+                    Updates to optimize for all browsers and devices may come in the future.
+                </div>
                 <div className="game">
                     <div className="game-status">
                         <div className="counter-panel">
