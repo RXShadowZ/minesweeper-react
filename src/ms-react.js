@@ -1,5 +1,8 @@
 import React from 'react';
 
+import flag_toggle from './images/flag_toggle.png';
+import sweep_toggle from './images/sweep_toggle.png';
+
 import './css-reset.css';
 import './ms-styles.css';
 import {MinesweeperGameState, CELL_STATE, CELL_VALUE, GAME_STATE, DIFFICULTY} from './minesweeper-logic';
@@ -430,8 +433,13 @@ class Game extends React.Component {
                     <strong>Right Click</strong> to place a <strong>flag</strong>.
                 </p>
                 <h3>For touchscreen users:</h3>
+                <img src={sweep_toggle} alt="toggle button in sweep mode" style={{"margin-top": "5px"}} />
                 <p>
-                     <strong>Tap</strong> to either <strong>sweep</strong> or place a <strong>flag</strong>.
+                    <strong>Tap</strong> to <strong>sweep</strong>.
+                </p>
+                <img src={flag_toggle} alt="toggle button in flag mode" style={{"margin-top": "5px"}} />
+                <p>
+                    <strong>Tap</strong> to place a <strong>flag</strong>.
                 </p>
                 <h2>How to Play</h2>
                 <a href="https://en.wikipedia.org/wiki/Minesweeper_(video_game)#Gameplay">
